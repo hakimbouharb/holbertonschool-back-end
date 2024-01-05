@@ -1,6 +1,7 @@
 #!/usr/bin/python3
-"""
-api : first use
+"""Using what you did in the task #0,
+extend your Python script to
+export data in the CSV format.
 """
 import requests
 import sys
@@ -29,4 +30,4 @@ if __name__ == "__main__":
     )
 
     for task in done_tasks:
-        print(f"\t {task['title']}")~
+        print(f"\t {task['title']}")
