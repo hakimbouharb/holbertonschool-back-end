@@ -1,23 +1,32 @@
 #!/usr/bin/python3
-"""Gathering the needed informations from the API."""
-import csv
-import json
+"""
+api : first use
+"""
 import requests
-from sys import argv
+import sys
 
-if __name__ == '__main__':
-    resp_users = requests.get('https://jsonplaceholder.typicode.com/users')
-    resp_todos = requests.get('https://jsonplaceholder.typicode.com/todos')
 
-    user_id = argv[1]
+if __name__ == "__main__":
 
-    for i in resp_users.json():
-        if i['id'] == int(user_id):
-            user_name = i['username']
-    with open(f'{user_id}.csv', 'w') as f:
-        for i in resp_todos.json():
-            if i['userId'] == int(user_id):
-                task = i['completed']
-                title = i['title']
-                f.write(
-                    f"\"{argv[1]}\",\"{user_name}\",\"{task}\",\"{title}\"\n")
+    employee_id = int(sys.argv[1])
+    api_url = "https://jsonplaceholder.typicode.com"
+
+    user_response = requests.get(f"{api_url}/users/{employee_id}")
+    user_data = user_response.json()
+
+    todos_response = requests.get(f"{api_url}/todos?userId={employee_id}")
+    todos_data = todos_response.json()
+
+    employee_name = user_data.get('name')
+    total_tasks = len(todos_data)
+    done_tasks = [task for task in todos_data if task['completed']]
+    total_done_tasks = len(done_tasks)
+
+    print(
+        "Employee {} is done with tasks({}/{}):".format(
+            employee_name, total_done_tasks, total_tasks
+        )
+    )
+
+    for task in done_tasks:
+        print(f"\t {task['title']}")~
