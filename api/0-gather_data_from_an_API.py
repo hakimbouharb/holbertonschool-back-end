@@ -1,23 +1,19 @@
 #!/usr/bin/python3
-"""Gathering the needed informations from the API."""
-import csv
-import json
+"""Returns to-do list information for a given employee ID."""
 import requests
-from sys import argv
+import sys
 
-if __name__ == '__main__':
-    resp_users = requests.get('https://jsonplaceholder.typicode.com/users')
-    resp_todos = requests.get('https://jsonplaceholder.typicode.com/todos')
+if __name__ == "__main__":
+    api_url = "https://jsonplaceholder.typicode.com/"
+    user = requests.get(api_url + "users/{}".format(sys.argv[1])).json()
+    todos = requests.get(
+        api_url + "todos", params={"userId": sys.argv[1]}).json()
 
-    user_id = argv[1]
-
-    for i in resp_users.json():
-        if i['id'] == int(user_id):
-            user_name = i['username']
-    with open(f'{user_id}.csv', 'w') as f:
-        for i in resp_todos.json():
-            if i['userId'] == int(user_id):
-                task = i['completed']
-                title = i['title']
-                f.write(
-                    f"\"{argv[1]}\",\"{user_name}\",\"{task}\",\"{title}\"\n")
+    completed = []
+    for task in todos:
+        if task.get("completed") is True:
+            completed.append(task.get("title"))
+    print("Employee {} is done with tasks({}/{}):".format(
+        user.get("name"), len(completed), len(todos)))
+    for complete in completed:
+        print("\t {}".format(complete))
