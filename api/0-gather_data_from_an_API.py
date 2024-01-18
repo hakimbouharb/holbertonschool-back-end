@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-"""
-api : first use
+"""Script to retrieve TODO list progress for a given employee
+ID using REST API
 """
 import requests
 import sys
